@@ -63,8 +63,8 @@ Důležité není tooling. Důležité je: standardizace, repeatability, reuse.
 | 3 | Vytvoření `/personal-os` struktury | `[x]` |
 | 4 | Napsání `CLAUDE.md` | `[x]` |
 | 5 | Vytvoření prvního starter template (Next.js v1) | `[x]` |
-| 6 | Nastavení repozitáře (git init, GitHub) | `[ ]` |
-| 7 | Výběr prvního reálného problému k řešení | `[ ]` |
+| 6 | Nastavení repozitáře (git init, GitHub) | `[x]` |
+| 7 | Výběr prvního reálného problému k řešení | `[x]` |
 
 **Struktura `/personal-os`:**
 ```
@@ -176,6 +176,7 @@ lessons/
 
 ## Aktuální stav projektu
 
-**Aktivní fáze:** Fáze 1 — AI Engineering Cockpit
+**Aktivní fáze:** Fáze 2 — Project Template
 **Poslední aktualizace:** 2026-06-03  
-**Hotovo dnes:** Fáze 1 kroky 1–5, Fáze 2 kroky 1, 8, 9
+**Fáze 1 dokončena:** 2026-06-03 — všechny kroky hotovy  
+**GitHub:** github.com/MichalScerba/compound-engineering (soukromý)
