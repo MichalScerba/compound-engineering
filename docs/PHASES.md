@@ -50,7 +50,7 @@ Pořadí, které zabraňuje stavění systémů bez zkušenosti:
 
 ## Fáze 1 — AI Engineering Cockpit
 
-**Stav:** `[~]` Probíhá
+**Stav:** `[x]` Dokončeno
 
 **Cíl:** jedno prostředí, kde vzniká všechno.
 
@@ -131,7 +131,7 @@ lessons/
 
 ## Fáze 4 — Specializované AI Role
 
-**Stav:** `[ ]` Nezahájeno
+**Stav:** `[~]` Probíhá
 
 **Cíl:** nepoužívat AI stylem „udělej mi feature", ale „funguj jako člen systému".
 
@@ -164,19 +164,17 @@ lessons/
 
 ## Konkrétní první týden
 
-| Den | Úkol | Stav |
-|-----|------|------|
-| 1 | Vytvoř `/personal-os` strukturu | `[x]` |
-| 2 | Napiš první `CLAUDE.md` | `[x]` |
-| 3 | Rozhodni stack + vytvoř kostru starter repozitáře | `[x]` |
-| 4 | Vytvoř první agent roli: `agents/debugger.md` | `[x]` |
-| 5 | Shipni malou appku pouze přes tento systém — testuj manufacturing, ne produkt | `[x]` |
+| Den | Úkol |
+|-----|------|
+| 1 | Vytvoř `/personal-os` strukturu |
+| 2 | Napiš první `CLAUDE.md` |
+| 3 | Rozhodni stack + vytvoř kostru starter repozitáře |
+| 4 | Vytvoř první agent roli: `agents/debugger.md` |
+| 5 | Shipni malou appku pouze přes tento systém — testuj manufacturing, ne produkt |
 
 ---
 
 ## Aktuální stav projektu
 
 **Aktivní fáze:** Fáze 2 — Project Template
-**Poslední aktualizace:** 2026-06-03  
-**Fáze 1 dokončena:** 2026-06-03 — všechny kroky hotovy  
-**GitHub:** github.com/MichalScerba/compound-engineering (soukromý)
+**Poslední aktualizace:** 2026-06-08
