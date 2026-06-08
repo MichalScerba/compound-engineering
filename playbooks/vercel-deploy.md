@@ -80,6 +80,22 @@ npx vercel --prod
 
 ---
 
+## Hromadné nastavení env proměnných ze .env.local
+
+Pokud máš `.env.local` s vyplněnými hodnotami, můžeš je hromadně přidat na Vercel:
+
+```bash
+set -a && source .env.local && set +a
+
+printf '%s' "$NEXT_PUBLIC_SUPABASE_URL" | vercel env add NEXT_PUBLIC_SUPABASE_URL production --force
+printf '%s' "$NEXT_PUBLIC_SUPABASE_ANON_KEY" | vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production --force
+printf '%s' "$ANTHROPIC_API_KEY" | vercel env add ANTHROPIC_API_KEY production --force
+```
+
+> `printf '%s'` místo `echo` — echo přidává newline, který Vercel zahrne do hodnoty a key přestane fungovat.
+
+---
+
 ## Časté problémy
 
 | Chyba | Příčina | Fix |
@@ -88,3 +104,4 @@ npx vercel --prod
 | Development cannot be combined | Development má jiná pravidla | Přidej Development zvlášť |
 | Build prošel lokálně, ne na Vercel | `.env.local` není na Vercelu | Přidej env proměnné přes CLI |
 | Auth redirect selže po přihlášení | Supabase nezná produkční URL | Přidej URL do Supabase → Authentication → Redirect URLs |
+| `hideSourceMaps` type error | Deprecated v novější verzi @sentry/nextjs | Nahraď za `sourcemaps: { disable: true }` |
