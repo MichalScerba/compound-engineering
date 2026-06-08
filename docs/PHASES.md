@@ -120,12 +120,12 @@ lessons/
 
 | # | Krok | Stav |
 |---|------|------|
-| 1 | Jak stavíš produkty (proces a principy) | `[ ]` |
-| 2 | Standardy: naming, architektura, coding conventions | `[ ]` |
-| 3 | Deployment flow | `[ ]` |
-| 4 | Testing philosophy | `[ ]` |
-| 5 | AI rules a interaction patterns | `[ ]` |
-| 6 | Product philosophy | `[ ]` |
+| 1 | Jak stavíš produkty (proces a principy) | `[x]` |
+| 2 | Standardy: naming, architektura, coding conventions | `[x]` |
+| 3 | Deployment flow | `[x]` |
+| 4 | Testing philosophy | `[x]` |
+| 5 | AI rules a interaction patterns | `[x]` |
+| 6 | Product philosophy | `[x]` |
 
 ---
 
