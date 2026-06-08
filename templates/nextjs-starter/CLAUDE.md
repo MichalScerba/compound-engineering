@@ -33,8 +33,18 @@ public/       ← static assets
 npx shadcn@latest add <component>
 ```
 
+## Supabase
+
+Client je v `lib/supabase.ts`. Env proměnné viz `.env.example`.
+
+Před spuštěním: zkopíruj `.env.example` → `.env.local` a vyplň hodnoty.
+
+Klíče: Settings → API → **Legacy anon, service_role API keys** → anon klíč (`eyJ...`).
+
 ## Dev
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
 ```

@@ -99,7 +99,7 @@ lessons/
 |---|------|------|
 | 1 | Rozhodnutí o stacku a kostra repozitáře | `[x]` |
 | 2 | Auth integrace | `[ ]` |
-| 3 | DB schéma a Supabase setup | `[ ]` |
+| 3 | DB schéma a Supabase setup | `[x]` |
 | 4 | Deploy pipeline (Vercel) | `[ ]` |
 | 5 | Logging a analytics | `[ ]` |
 | 6 | Billing (Stripe) | `[ ]` |
@@ -178,3 +178,4 @@ lessons/
 
 **Aktivní fáze:** Fáze 2 — Project Template
 **Poslední aktualizace:** 2026-06-08
+**Fáze 2 aktivní kroky:** 1, 3, 8, 9 hotovy — další: Auth (krok 2)
