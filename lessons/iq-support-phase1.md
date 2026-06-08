@@ -147,6 +147,37 @@ Claude Haiku při instrukci "reply in the same language" občas identifikuje če
 
 Totéž platí pro hodnocení — pokud chceš improved answer v češtině, řekni to explicitně v promptu.
 
+### 13. Tracking AI suggestion vs. finální odpověď — learning signal
+
+Pokud chceš systém který se učí, musíš zachytit rozdíl mezi tím co AI navrhla a co uživatel skutečně odeslal.
+
+Pattern:
+1. AI návrh se načte do textarea → uloží se do `ref` (ne state — nevyvolává re-render)
+2. Při odeslání formuláře se přidá do `FormData` jako extra pole
+3. Server action ho uloží do DB podmíněně (jen pokud existuje)
+
+```typescript
+// Client: ref místo state pro tracking bez re-renderu
+const aiSuggestionRef = useRef<string | null>(null);
+
+// Při načtení návrhu
+aiSuggestionRef.current = suggestion;
+
+// Při submit
+if (aiSuggestionRef.current) {
+  formData.set("aiSuggestion", aiSuggestionRef.current);
+}
+
+// Server action
+const aiSuggestion = formData.get("aiSuggestion") as string | null;
+await supabase.from("qa_archive").insert({
+  answer_sent: reply,
+  ...(aiSuggestion ? { ai_suggested_answer: aiSuggestion } : {}),
+});
+```
+
+Výsledek: `ai_suggested_answer` vs `answer_sent` = training signal. Kde se liší, tam uživatel opravil AI — to jsou nejcennější příklady pro budoucí fine-tuning nebo prompt engineering.
+
 ### 12. Semantic similarity check přes Claude — bez vector DB
 
 Pro porovnání nového dotazu s archivem (Q&A matching) lze použít Claude přímo — bez embeddings, bez vector DB.
