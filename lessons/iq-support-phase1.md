@@ -2,7 +2,7 @@
 
 **Projekt:** IQ-Support — emailová podpora s AI analytikou
 **Datum:** 2026-06-08
-**Fáze:** MVP + Dashboard + Sidebar + Sledování času
+**Fáze:** MVP + Dashboard + Sidebar + Sledování času + AI asistence
 
 ---
 
@@ -14,6 +14,7 @@
 - Sidebar navigace s route group `(protected)`
 - Deploy na Vercel
 - Sledování času: auto-start timer, auto-save při odchodu, ochrana proti souběžným tabům
+- AI návrh odpovědi: on-demand button, API route, pre-fill textarea
 
 ---
 
@@ -130,6 +131,40 @@ channel.onmessage = (event) => {
 ```
 
 **Gotcha:** nekontroluj `event.data.caseId !== caseId` — chceš zastavit timer při JAKÉMKOLI jiném aktivním timeru, i pro stejný případ.
+
+### 10. Claude zaměňuje češtinu za polštinu
+
+Claude Haiku při instrukci "reply in the same language" občas identifikuje češtinu jako polštinu. Slavické jazyky jsou si podobné a model se plete.
+
+**Fix — vždy explicitně pojmenuj jazyk:**
+```typescript
+// Špatně
+"Reply in the same language as the question."
+
+// Správně
+"You are a Czech customer support agent. Always reply in Czech language."
+```
+
+Totéž platí pro hodnocení — pokud chceš improved answer v češtině, řekni to explicitně v promptu.
+
+### 11. AI suggestion — on-demand přes API route, ne server action
+
+Generování AI návrhu v reply formu: uživatel klikne tlačítko → fetch na API route → výsledek se vloží do textarea.
+
+Proč API route a ne server action: server action vrací redirect nebo data, ale nelze ho volat z `onClick` bez form submit. Pro on-demand volání z client component vždy použij API route.
+
+```typescript
+// components/reply-form.tsx
+async function handleSuggest() {
+  const res = await fetch("/api/cases/suggest", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question }),
+  });
+  const { suggestion } = await res.json();
+  textareaRef.current.value = suggestion;
+}
+```
 
 ---
 
