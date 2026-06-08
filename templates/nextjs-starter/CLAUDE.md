@@ -49,6 +49,27 @@ Env proměnné viz `.env.example`. Klíče: Settings → API → **Legacy anon, 
 
 Middleware chrání `/dashboard/*` by default. Pro přidání dalších chráněných routes uprav `middleware.ts`.
 
+## Git konvence
+
+**Branch naming:**
+```
+feat/<co>     ← nová funkce
+fix/<co>      ← oprava bugu
+chore/<co>    ← údržba (deps, config, refactor)
+docs/<co>     ← dokumentace
+```
+
+**Commit messages:**
+- Formát: `typ: co a proč` (jedna řádka, anglicky)
+- Typy: `feat`, `fix`, `chore`, `docs`, `refactor`
+- Popis co se mění, ne jak — kód to říká sám
+
+**PR pravidla:**
+- Jeden PR = jedna věc
+- Malé PRy nad velkými — jednodušší review
+- Použij `.github/PULL_REQUEST_TEMPLATE.md` — vyplní se automaticky
+- WIP → použij GitHub Draft PR
+
 ## Dev
 
 ```bash

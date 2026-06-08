@@ -106,7 +106,7 @@ lessons/
 | 7 | Landing page template | `[ ]` |
 | 8 | Design system (shadcn/ui) | `[x]` |
 | 9 | CLAUDE.md a AI instructions | `[x]` |
-| 10 | PR rules a coding conventions | `[ ]` |
+| 10 | PR rules a coding conventions | `[x]` |
 
 > Pozor: kroky 1–4 jsou základ, kroky 5–10 jsou rozšíření. Nedělat vše najednou.
 
@@ -178,4 +178,4 @@ lessons/
 
 **Aktivní fáze:** Fáze 2 — Project Template
 **Poslední aktualizace:** 2026-06-08
-**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 8, 9 hotovy — základ validovaný na reálném projektu (auth-test), zbývá: logging, billing, landing, PR rules
+**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 8, 9, 10 hotovy — základ + PR rules validovány, zbývá: logging, billing, landing
