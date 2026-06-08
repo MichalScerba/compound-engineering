@@ -131,18 +131,19 @@ lessons/
 
 ## Fáze 4 — Specializované AI Role
 
-**Stav:** `[~]` Probíhá
+**Stav:** `[x]` Dokončeno
 
 **Cíl:** nepoužívat AI stylem „udělej mi feature", ale „funguj jako člen systému".
 
 | # | Role | Soubor | Stav |
 |---|------|--------|------|
-| 1 | Architect — navrhuje systém | `agents/architect.md` | `[ ]` |
-| 2 | Builder — implementuje feature | `agents/builder.md` | `[ ]` |
-| 3 | Refactorer — zjednodušuje kód | `agents/refactorer.md` | `[ ]` |
+| 0 | Orchestrator — koordinuje agenty | `agents/orchestrator.md` | `[x]` |
+| 1 | Architect — navrhuje systém | `agents/architect.md` | `[x]` |
+| 2 | Builder — implementuje feature | `agents/builder.md` | `[x]` |
+| 3 | Refactorer — zjednodušuje kód | `agents/refactorer.md` | `[x]` |
 | 4 | Debugger — hledá root cause | `agents/debugger.md` | `[x]` |
-| 5 | QA — píše test scénáře | `agents/qa.md` | `[ ]` |
-| 6 | Product Thinker — zpochybňuje feature | `agents/product-thinker.md` | `[ ]` |
+| 5 | QA — píše test scénáře | `agents/qa.md` | `[x]` |
+| 6 | Product Thinker — zpochybňuje feature | `agents/product-thinker.md` | `[x]` |
 
 ---
 

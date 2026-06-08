@@ -12,6 +12,40 @@ Detailní záznamy průběhu projektu, rozhodnutí, poznatků a kontextu.
 
 Dokončeny kroky 2–4 Fáze 2 — template má plně funkční základ.
 
+**Fáze 3 — Operating Manual (SYSTEM.md) dokončena**
+
+Dokument `docs/SYSTEM.md` vznikl rozhovorem krok po kroku — 6 sekcí zachycuje celý engineering OS:
+
+1. **Jak stavím produkty** — 5 kroků od project definition po hotovou feature, 5 principů
+2. **Standardy** — kebab-case projekty a soubory, PascalCase komponenty, flat over nested architektura
+3. **Deployment flow** — preview vždy před produkcí, jeden deploy = jedna feature
+4. **Testing philosophy** — manuální vždy, automatický pro logiku/kritické flow/regrese; pravidlo: testy aby zachránily, ne aby existovaly
+5. **AI rules** — jeden krok najednou, čeština pro komunikaci, pravidlo 3 pokusů pak reset
+6. **Product philosophy** — osobní zkušenost jako zdroj, malé a fokusované, definition first
+
+---
+
+**Logging a analytics (krok 5):**
+- `@sentry/nextjs` — error tracking, silent bez DSN
+- `@vercel/analytics` — page views, 1 řádek v `layout.tsx`
+- `sentry.client.config.ts`, `sentry.server.config.ts`, `instrumentation.ts`
+- `next.config.ts` wrappnutý s `withSentryConfig`
+- `.env.example` rozšířen o Sentry proměnné
+
+**PR rules (krok 10):**
+- `.github/PULL_REQUEST_TEMPLATE.md` — šablona pro PR (co, proč, jak testovat, checklist)
+- `CLAUDE.md` — branch naming (`feat/`, `fix/`, `chore/`, `docs/`), commit message formát, PR pravidla
+
+**Landing page (krok 7):**
+- `app/page.tsx` — Hero + Features (3 karty) + CTA sekce
+- Placeholder text, nahradit = 5 minut na novém projektu
+
+**Billing přeskočen** — přidá se na prvním reálném projektu kde je potřeba.
+
+**Stav Fáze 2:** 9/10 kroků hotovo. Základ template validovaný na reálném projektu.
+
+---
+
 **Supabase setup (krok 3):**
 - `lib/supabase.ts` — browser client (`createBrowserClient` z `@supabase/ssr`)
 - `lib/supabase-server.ts` — server client pro Server Components a Server Actions
