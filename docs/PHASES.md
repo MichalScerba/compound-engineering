@@ -103,7 +103,7 @@ lessons/
 | 4 | Deploy pipeline (Vercel) | `[x]` |
 | 5 | Logging a analytics | `[x]` |
 | 6 | Billing (Stripe) | `[ ]` |
-| 7 | Landing page template | `[ ]` |
+| 7 | Landing page template | `[x]` |
 | 8 | Design system (shadcn/ui) | `[x]` |
 | 9 | CLAUDE.md a AI instructions | `[x]` |
 | 10 | PR rules a coding conventions | `[x]` |
@@ -178,4 +178,4 @@ lessons/
 
 **Aktivní fáze:** Fáze 2 — Project Template
 **Poslední aktualizace:** 2026-06-08
-**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 5, 8, 9, 10 hotovy — zbývá: billing, landing
+**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 5, 7, 8, 9, 10 hotovy — billing přeskočen (přidá se na prvním reálném projektu)
