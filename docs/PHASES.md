@@ -178,4 +178,4 @@ lessons/
 
 **Aktivní fáze:** Fáze 2 — Project Template
 **Poslední aktualizace:** 2026-06-08
-**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 8, 9 hotovy — základ kompletní, zbývá: logging, billing, landing, PR rules
+**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 8, 9 hotovy — základ validovaný na reálném projektu (auth-test), zbývá: logging, billing, landing, PR rules

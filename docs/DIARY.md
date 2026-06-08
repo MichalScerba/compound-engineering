@@ -4,6 +4,55 @@ Detailní záznamy průběhu projektu, rozhodnutí, poznatků a kontextu.
 
 ---
 
+## 2026-06-08
+
+### Fáze 2 — základ template dokončen + reálný test
+
+**Co vzniklo:**
+
+Dokončeny kroky 2–4 Fáze 2 — template má plně funkční základ.
+
+**Supabase setup (krok 3):**
+- `lib/supabase.ts` — browser client (`createBrowserClient` z `@supabase/ssr`)
+- `lib/supabase-server.ts` — server client pro Server Components a Server Actions
+- `.env.example` — s komentáři k legacy klíči
+- `@supabase/supabase-js` a `@supabase/ssr` přidány do `package.json`
+- `.gitignore` opraven — přidána výjimka `!.env.example`
+
+**Auth integrace (krok 2):**
+- `app/login/page.tsx` — login + signup v jednom formuláři
+- `app/dashboard/page.tsx` — chráněná route s user info a sign out
+- `app/auth/callback/route.ts` — PKCE callback handler
+- `proxy.ts` — session refresh + ochrana `/dashboard/*` + redirect přihlášených z `/login`
+
+**Deploy pipeline (krok 4):**
+- `vercel.json` — security headers (X-Frame-Options, XSS, nosniff, referrer policy)
+- `playbooks/vercel-deploy.md` — rozšířen o Supabase env proměnné, redirect URL setup a verifikační checklist
+
+---
+
+### Reálný test — auth-test projekt
+
+Template otestován na projektu `/Users/michalscerba/AI-Projects/Personal/auth-test`.
+
+Postup:
+1. Template zkopírován přes `rsync` (bez `node_modules`, `.next`)
+2. Supabase projekt `auth-test` vytvořen, klíče vyplněny do `.env.local`
+3. `npm install && npm run dev` — app spuštěna lokálně
+4. Registrace → potvrzení emailu → přihlášení → dashboard → sign out — vše funkční
+
+**Nalezené bugy (opraveny zpět v template):**
+
+1. **`emailRedirectTo` chybí** — confirmation email přesměrovával na `/?code=...` místo `/auth/callback?code=...`. Fix: přidáno `options.emailRedirectTo` do `signUp` volání.
+
+2. **`middleware.ts` deprecated** — Next.js 16 přejmenoval konvenci na `proxy.ts`. Fix: soubor přejmenován, deprecation warning odstraněn.
+
+**Klíčová lekce:**
+
+Compound efekt v praxi — test na reálném projektu odhalil dva bugy, které by jinak zůstaly skryté. Opraveny zpět v OS → příští projekt je dostane opravené automaticky.
+
+---
+
 ## 2026-06-03
 
 ### Inicializace projektu
