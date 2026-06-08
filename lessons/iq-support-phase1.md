@@ -2,7 +2,7 @@
 
 **Projekt:** IQ-Support — emailová podpora s AI analytikou
 **Datum:** 2026-06-08
-**Fáze:** MVP + Dashboard + Sidebar
+**Fáze:** MVP + Dashboard + Sidebar + Sledování času
 
 ---
 
@@ -13,6 +13,7 @@
 - Dashboard se stats (daily: přijato, vyřešeno, úspěšnost, Ø AI skóre)
 - Sidebar navigace s route group `(protected)`
 - Deploy na Vercel
+- Sledování času: auto-start timer, auto-save při odchodu, ochrana proti souběžným tabům
 
 ---
 
@@ -85,6 +86,50 @@ withSentryConfig(nextConfig, {
 // Správně
 <Link href="/login"><Button>Text</Button></Link>
 ```
+
+### 7. Timer — `Date.now()` místo tick counting
+
+`setInterval` v pozadí tab throttluje → timer zpomalí. Vždy měř reálný čas:
+
+```typescript
+const startRef = useRef(Date.now());
+setInterval(() => {
+  setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+}, 1000);
+```
+
+### 8. Auto-save při navigaci — `navigator.sendBeacon` + API route
+
+Server actions nelze spolehlivě volat v `useEffect` cleanup (async, component už unmounted).
+`sendBeacon` odesílá request na pozadí i při navigaci pryč — funguje pro soft i hard navigation.
+
+Vyžaduje vlastní API route (ne server action):
+```typescript
+// app/api/cases/time/route.ts
+export async function POST(request: NextRequest) { ... }
+
+// cleanup v komponentě
+const blob = new Blob([JSON.stringify({ caseId, seconds })], { type: "application/json" });
+navigator.sendBeacon("/api/cases/time", blob);
+```
+
+### 9. Souběžné taby — `BroadcastChannel`
+
+Při otevření případu ve více tabech by timery běžely paralelně → dvojí počítání.
+`BroadcastChannel` umožňuje komunikaci mezi taby stejného originu.
+
+```typescript
+const channel = new BroadcastChannel("iq-timer");
+channel.postMessage({ type: "timer-started", caseId });
+
+channel.onmessage = (event) => {
+  if (event.data.type === "timer-started") {
+    stopAndSave(); // zastaví a uloží tento timer
+  }
+};
+```
+
+**Gotcha:** nekontroluj `event.data.caseId !== caseId` — chceš zastavit timer při JAKÉMKOLI jiném aktivním timeru, i pro stejný případ.
 
 ---
 
