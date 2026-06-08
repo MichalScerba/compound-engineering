@@ -12,6 +12,43 @@ Detailní záznamy průběhu projektu, rozhodnutí, poznatků a kontextu.
 
 Dokončeny kroky 2–4 Fáze 2 — template má plně funkční základ.
 
+**Fáze 4 — Specializované AI role dokončeny**
+
+7 agentů v `agents/`:
+- **Orchestrator** — koordinuje agenty, řídí zpětný tok do OS, ví kam a jak ukládat poznatky
+- **Architect** — navrhuje systém před tím než někdo píše kód
+- **Builder** — implementuje jednu feature od začátku do konce
+- **Refactorer** — zjednodušuje kód bez změny chování
+- **Debugger** — hledá root cause, ne symptomy (existoval od Fáze 1)
+- **QA** — píše test scénáře, myslí v edge cases
+- **Product Thinker** — zpochybňuje feature před tím než se staví
+
+Klíčové rozhodnutí: Orchestrator jako řídící agent s povinnou kontrolou zpětného toku po každém tasku. Ví přesně kam co uložit a jak.
+
+---
+
+**Fáze 5 — Memory System dokončen**
+
+- `architecture/ADR-template.md` — šablona pro architektonická rozhodnutí
+- `lessons/postmortem-template.md` — šablona pro postmortemy s explicitní sekcí "co patří zpět do OS"
+- `prompts/project-definition.md` — project definition prompt (8 sekcí, readiness score)
+
+Zpětný tok do OS je zakódován v Orchestratoru — není závislý na paměti nebo disciplíně.
+
+---
+
+**Compound Engineering OS — všech 5 fází dokončeno**
+
+| Fáze | Stav |
+|------|------|
+| 1 — AI Engineering Cockpit | `[x]` |
+| 2 — Project Template | `[x]` |
+| 3 — Operating Manual | `[x]` |
+| 4 — Specializované AI role | `[x]` |
+| 5 — Memory System | `[x]` |
+
+---
+
 **Fáze 3 — Operating Manual (SYSTEM.md) dokončena**
 
 Dokument `docs/SYSTEM.md` vznikl rozhovorem krok po kroku — 6 sekcí zachycuje celý engineering OS:
