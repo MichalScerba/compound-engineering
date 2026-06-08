@@ -147,6 +147,25 @@ Claude Haiku při instrukci "reply in the same language" občas identifikuje če
 
 Totéž platí pro hodnocení — pokud chceš improved answer v češtině, řekni to explicitně v promptu.
 
+### 12. Semantic similarity check přes Claude — bez vector DB
+
+Pro porovnání nového dotazu s archivem (Q&A matching) lze použít Claude přímo — bez embeddings, bez vector DB.
+
+Pošli nový dotaz + archiv jako text, Claude vrátí index nejbližší shody a score:
+
+```typescript
+const archiveText = archive
+  .map((e, i) => `[${i}] Q: ${e.question}\nA: ${e.answer_sent}`)
+  .join("\n\n");
+
+// Claude vrátí: { index: number, score: number }
+// index === -1 nebo score < 85 → žádná shoda
+```
+
+**Trade-off:** jednoduché, žádná infrastruktura, ale pomalejší a dražší než embeddings. Vhodné pro malé archivy (< 100 záznamů). Pro větší objemy přejít na pgvector nebo jiný vector store.
+
+**Kde spustit:** server-side při načtení page (synchronní, přidá ~500ms latency) nebo on-demand po kliku. Pro případ detailu je server-side vhodné — výsledek je k dispozici hned.
+
 ### 11. AI suggestion — on-demand přes API route, ne server action
 
 Generování AI návrhu v reply formu: uživatel klikne tlačítko → fetch na API route → výsledek se vloží do textarea.
