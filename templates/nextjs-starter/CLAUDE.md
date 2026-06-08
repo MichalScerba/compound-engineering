@@ -35,11 +35,19 @@ npx shadcn@latest add <component>
 
 ## Supabase
 
-Client je v `lib/supabase.ts`. Env proměnné viz `.env.example`.
+- `lib/supabase.ts` — browser client (Client Components)
+- `lib/supabase-server.ts` — server client (Server Components, Server Actions)
 
-Před spuštěním: zkopíruj `.env.example` → `.env.local` a vyplň hodnoty.
+Env proměnné viz `.env.example`. Klíče: Settings → API → **Legacy anon, service_role API keys** → anon klíč (`eyJ...`).
 
-Klíče: Settings → API → **Legacy anon, service_role API keys** → anon klíč (`eyJ...`).
+## Auth
+
+- `/login` — přihlášení i registrace
+- `/dashboard` — chráněná route (redirect na `/login` bez session)
+- `middleware.ts` — session refresh + ochrana `/dashboard/*`
+- `app/auth/callback/route.ts` — callback pro OAuth / magic link
+
+Middleware chrání `/dashboard/*` by default. Pro přidání dalších chráněných routes uprav `middleware.ts`.
 
 ## Dev
 
