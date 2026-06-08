@@ -44,7 +44,7 @@ Env proměnné viz `.env.example`. Klíče: Settings → API → **Legacy anon, 
 
 - `/login` — přihlášení i registrace
 - `/dashboard` — chráněná route (redirect na `/login` bez session)
-- `middleware.ts` — session refresh + ochrana `/dashboard/*`
+- `proxy.ts` — session refresh + ochrana `/dashboard/*` (Next.js 16: middleware.ts → proxy.ts)
 - `app/auth/callback/route.ts` — callback pro OAuth / magic link
 
 Middleware chrání `/dashboard/*` by default. Pro přidání dalších chráněných routes uprav `middleware.ts`.
