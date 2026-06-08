@@ -30,6 +30,16 @@ npx vercel env add NAZEV_PROMENNE production
 npx vercel env add NAZEV_PROMENNE preview
 ```
 
+**Pro nextjs-starter template přidej:**
+
+```bash
+npx vercel env add NEXT_PUBLIC_SUPABASE_URL production
+npx vercel env add NEXT_PUBLIC_SUPABASE_URL preview
+
+npx vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
+npx vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY preview
+```
+
 **Důležité:**
 - `NEXT_PUBLIC_` proměnné jsou veřejné — na otázku "Make it sensitive?" odpověz **n**
 - Na otázku "How to proceed?" vyber **Leave as is**
@@ -38,11 +48,35 @@ npx vercel env add NAZEV_PROMENNE preview
 
 ---
 
-## 3. Deploy na produkci
+## 3. Nastav Supabase redirect URL (pokud používáš auth)
+
+Po prvním deployi Vercel přidělí URL ve formátu `https://<projekt>.vercel.app`.
+
+V Supabase dashboardu:
+1. **Authentication → URL Configuration**
+2. **Site URL** — nastav na produkční URL: `https://<projekt>.vercel.app`
+3. **Redirect URLs** — přidej:
+   - `https://<projekt>.vercel.app/auth/callback`
+   - `http://localhost:3000/auth/callback` (pro lokální vývoj)
+
+> Bez tohoto kroku Supabase odmítne přesměrovat uživatele po přihlášení.
+
+---
+
+## 4. Deploy na produkci
 
 ```bash
 npx vercel --prod
 ```
+
+---
+
+## 5. Ověř auth po deployi
+
+1. Otevři `https://<projekt>.vercel.app/login`
+2. Zaregistruj testovací účet
+3. Ověř redirect na `/dashboard`
+4. Ověř sign out → redirect na `/login`
 
 ---
 
@@ -53,3 +87,4 @@ npx vercel --prod
 | `npm run build` exited with 1 | Chybějící env proměnné na Vercel | Přidej přes `vercel env add` |
 | Development cannot be combined | Development má jiná pravidla | Přidej Development zvlášť |
 | Build prošel lokálně, ne na Vercel | `.env.local` není na Vercelu | Přidej env proměnné přes CLI |
+| Auth redirect selže po přihlášení | Supabase nezná produkční URL | Přidej URL do Supabase → Authentication → Redirect URLs |
