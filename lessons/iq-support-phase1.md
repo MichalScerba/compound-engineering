@@ -20,15 +20,34 @@
 
 ## Technické lekce
 
-### 1. Claude API vrací JSON zabalený v markdown code blocku
+### 1. Claude API vrací JSON se špatnými control characters nebo v markdown code blocku
 
-Model občas obalí JSON do ` ```json ``` ` i když instrukce říkají "respond ONLY with valid JSON".
+Dva časté problémy při parsování Claude JSON výstupu:
+1. Model obalí JSON do ` ```json ``` ` i když instrukce říkají "respond ONLY with valid JSON"
+2. Model vloží literální `\n` bajt (0x0A) do JSON string hodnoty místo escapovaného `\\n` — `JSON.parse` selže s "Bad control character in string literal"
 
-**Fix — před JSON.parse vždy strip:**
+**Fix — `parseJSON` helper s fallback sanitizací:**
 ```typescript
-const clean = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
-return JSON.parse(clean);
+function parseJSON<T>(text: string): T {
+  const clean = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+  try {
+    return JSON.parse(clean) as T;
+  } catch {
+    // Escape literal control characters inside JSON string values
+    const sanitized = clean.replace(/"(?:[^"\\]|\\.)*"/g, (match) =>
+      match.replace(/[\x00-\x1f]/g, (c) => {
+        if (c === "\n") return "\\n";
+        if (c === "\r") return "\\r";
+        if (c === "\t") return "\\t";
+        return "";
+      })
+    );
+    return JSON.parse(sanitized) as T;
+  }
+}
 ```
+
+Regex `"(?:[^"\\]|\\.)*"` správně matchuje JSON string literály (včetně escapovaných znaků jako `\"`) a escapuje v nich control chars. Funguje jako fallback — normální parse se zkouší první.
 
 ### 2. Route group `(protected)` — sdílený layout bez změny URL
 
