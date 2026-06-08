@@ -88,3 +88,56 @@ Agents involved: [list]
 Outcome: [done / blocked / needs follow-up]
 Follow-up: [if any]
 ```
+
+---
+
+## Zpětný tok do Compound Engineering OS
+
+Po každém dokončeném tasku nebo projektu projdi tuto kontrolu. Toto není volitelné — je to součást orchestrace.
+
+**Projdi tyto otázky:**
+
+| Otázka | Pokud ano → akce |
+|--------|-----------------|
+| Vznikl nový postup který se bude opakovat? | Přidat nebo aktualizovat `playbooks/` |
+| Bylo uděláno architektonické rozhodnutí? | Zapsat ADR do `architecture/` |
+| Něco selhalo nebo bylo těžší než mělo být? | Zapsat postmortem do `lessons/` |
+| Template by měl být opraven nebo rozšířen? | Aktualizovat `templates/nextjs-starter/` |
+| Vznikl reusable prompt? | Přidat do `prompts/` |
+| Byl objeven bug v agentovi? | Aktualizovat příslušný `agents/*.md` |
+
+**Trigger:**
+> Kdykoliv tě něco sere podruhé → je to kandidát na systém.
+
+Pokud odpověď na všechny otázky je ne — explicitně to potvrď. Nevynechávej kontrolu tiše.
+
+**Na konci každého projektu navíc:**
+Projdi `docs/DIARY.md` projektu a navrhni co konkrétně extrahovat do OS. Výstup: seznam akcí s přiřazenými soubory.
+
+---
+
+## Jak uložit zpět do OS
+
+Compound Engineering OS je repozitář na `/Users/michalscerba/AI-Projects/Personal/Compound-Engineering/`.
+
+**Postup:**
+
+1. Přepni kontext do OS repozitáře
+2. Ulož soubor na správné místo (viz tabulka níže)
+3. Commitni změnu s výstižnou zprávou
+4. Pushni na GitHub
+
+**Kam co patří:**
+
+| Typ poznatku | Cílový soubor |
+|-------------|---------------|
+| Nový postup (setup, deploy, debug) | `playbooks/<název>.md` |
+| Architektonické rozhodnutí | `architecture/ADR-<číslo>-<název>.md` (použij `architecture/ADR-template.md`) |
+| Lekce z projektu nebo incidentu | `lessons/<projekt>-postmortem.md` (použij `lessons/postmortem-template.md`) |
+| Oprava nebo rozšíření template | `templates/nextjs-starter/<soubor>` |
+| Nový reusable prompt | `prompts/<název>.md` |
+| Oprava agenta | `agents/<název>.md` |
+| Záznam průběhu | `docs/DIARY.md` (přidej nový záznam na začátek) |
+
+**Po uložení:**
+Aktualizuj `docs/PHASES.md` pokud byl dokončen krok v aktivní fázi.

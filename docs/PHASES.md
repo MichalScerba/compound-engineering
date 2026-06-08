@@ -149,17 +149,17 @@ lessons/
 
 ## Fáze 5 — Memory System
 
-**Stav:** `[ ]` Nezahájeno
+**Stav:** `[x]` Dokončeno
 
 **Cíl:** po roce mít vlastní software manufacturing intelligence.
 
 | # | Krok | Stav |
 |---|------|------|
-| 1 | Systém na ukládání rozhodnutí a patterns | `[ ]` |
-| 2 | Záznamy chyb a postmortems | `[ ]` |
-| 3 | Reusable prompty a debugging postupy | `[ ]` |
-| 4 | Architecture patterns library | `[ ]` |
-| 5 | Deployment postupy a runbooky | `[ ]` |
+| 1 | Systém na ukládání rozhodnutí a patterns | `[x]` |
+| 2 | Záznamy chyb a postmortems | `[x]` |
+| 3 | Reusable prompty a debugging postupy | `[x]` |
+| 4 | Architecture patterns library | `[x]` |
+| 5 | Deployment postupy a runbooky | `[x]` |
 
 ---
 
