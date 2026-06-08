@@ -49,6 +49,13 @@ Env proměnné viz `.env.example`. Klíče: Settings → API → **Legacy anon, 
 
 Middleware chrání `/dashboard/*` by default. Pro přidání dalších chráněných routes uprav `middleware.ts`.
 
+## Logging a analytics
+
+- **Vercel Analytics** — page views, automaticky aktivní po deployi na Vercel. Kód: `<Analytics />` v `layout.tsx`.
+- **Sentry** — error tracking. Konfigurace v `sentry.client.config.ts` a `sentry.server.config.ts`. DSN viz `.env.example`.
+
+Sentry se aktivuje pouze pokud je `NEXT_PUBLIC_SENTRY_DSN` vyplněné. Bez DSN je silent.
+
 ## Git konvence
 
 **Branch naming:**

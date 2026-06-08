@@ -101,7 +101,7 @@ lessons/
 | 2 | Auth integrace | `[x]` |
 | 3 | DB schéma a Supabase setup | `[x]` |
 | 4 | Deploy pipeline (Vercel) | `[x]` |
-| 5 | Logging a analytics | `[ ]` |
+| 5 | Logging a analytics | `[x]` |
 | 6 | Billing (Stripe) | `[ ]` |
 | 7 | Landing page template | `[ ]` |
 | 8 | Design system (shadcn/ui) | `[x]` |
@@ -178,4 +178,4 @@ lessons/
 
 **Aktivní fáze:** Fáze 2 — Project Template
 **Poslední aktualizace:** 2026-06-08
-**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 8, 9, 10 hotovy — základ + PR rules validovány, zbývá: logging, billing, landing
+**Fáze 2 aktivní kroky:** 1, 2, 3, 4, 5, 8, 9, 10 hotovy — zbývá: billing, landing
