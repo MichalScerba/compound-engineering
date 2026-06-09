@@ -196,10 +196,12 @@ lessons/
 | 2 | AI asistence — návrhy, knowledge base, candidate agent | `[x]` |
 | 2b | Inbox status flow — new→open→in_progress→closed, timestamps | `[x]` |
 | 2c | Time-based rating — elapsed pill na seznamu, hodnocení na detailu | `[x]` |
-| 3 | Škálování — analytika, role, multi-tenant | `[ ]` |
+| 3 | Analytika — reporting stránka, KPI, rating distribuce, trend | `[x]` |
+| 4 | Škálování — role, multi-tenant | `[ ]` |
 
 **Status flow:** `new` (inbox) → `open` (přečteno, auto při prvním otevření) → `in_progress` → `closed`
 **Timestamps:** `opened_at` (first-touch time), `closed_at` (resolution time) → základ pro analytiku
 **Rating:** `lib/case-rating.ts` — inbox band (1h/4h), resolution band (2h/8h), composite worst-case rule → green/yellow/red
+**Reporting:** `/reporting` — KPI karty, rating distribuce, status breakdown, 30denní trend; period filter 7d/30d/vše
 
 **Blokováno:** M365 Graph API (čekání na IT — email integrace)
