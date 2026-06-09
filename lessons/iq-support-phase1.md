@@ -339,6 +339,67 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
 }
 ```
 
+### 20. Q&A Candidate Agent — background agent pattern
+
+Opakující se zákaznické dotazy je potřeba detekovat asynchronně, ne synchronně při každém odeslání odpovědi.
+
+**Architektura:**
+```
+Case resolved → updateStatus → fire-and-forget fetch /api/qa/candidate
+                                        ↓
+                              Porovná s qa_archive + qa_candidates (Claude, práh 80%)
+                                        ↓
+                    shoda v archivu → skip
+                    shoda v kandidátech → inkrement; při ≥2 vygeneruj draft → pending
+                    žádná shoda → nový kandidát pending_count
+```
+
+**Klíčová rozhodnutí:**
+- API route (ne server action) — background job bez user session
+- `createServiceClient()` s `SUPABASE_SERVICE_ROLE_KEY` — service role bypasuje RLS; anon klíč by v background agentu nefungoval
+- Fire-and-forget: `fetch(...).catch(e => console.error(e))` — redirect nečeká na agenta
+- `qa_candidates` jako fronta: odděluje surová data od kuratované knowledge base; do `qa_archive` jde pouze schválený záznam
+
+**`lib/supabase-service.ts` pattern:**
+```typescript
+import { createClient } from "@supabase/supabase-js";
+export function createServiceClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
+```
+
+**Gotcha:** `SUPABASE_SERVICE_ROLE_KEY` je jiný klíč než `NEXT_PUBLIC_SUPABASE_ANON_KEY` — najdeš ho v Supabase → Settings → API → Legacy anon, service_role API keys. Nikdy ho nedávej do klienta.
+
+### 21. `formAction` na tlačítkách v client componentě — více server actions v jednom formu
+
+Approve/Reject v `CandidateCard` sdílí stejný form (textarea hodnoty), ale každé tlačítko volá jinou server action.
+
+```tsx
+<form>
+  <input type="hidden" name="candidateId" value={candidate.id} />
+  <textarea name="questionDraft" defaultValue={candidate.question_draft} />
+  <textarea name="answerDraft" defaultValue={candidate.answer_draft} />
+
+  <button formAction={rejectAction}>Zamítnout</button>
+  <button formAction={approveAction}>Schválit</button>
+</form>
+```
+
+`formAction` prop na `<button>` funguje i v client componentách — server action se předá jako prop z page. Textarea hodnoty se odešlou s tím formulářem, přes který bylo kliknuto. Není potřeba controlled state ani refs.
+
+### 22. Supabase join vrací pole, ne objekt — TypeScript casting
+
+Supabase client typuje `qa_categories(...)` join jako array i když je to FK vztah 1:1. Vlastní interface má `qa_categories: Category | null`. Cast přes `unknown` je nutný:
+
+```typescript
+const entries = (data ?? []) as unknown as QAEntry[];
+```
+
+`as QAEntry[]` přímo selže: TypeScript vidí neslučitelné typy. `as unknown as T` je správný způsob pro override Supabase generovaných typů.
+
 ### 11. AI suggestion — on-demand přes API route, ne server action
 
 Generování AI návrhu v reply formu: uživatel klikne tlačítko → fetch na API route → výsledek se vloží do textarea.
