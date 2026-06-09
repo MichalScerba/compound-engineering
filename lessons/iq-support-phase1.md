@@ -339,6 +339,21 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
 }
 ```
 
+### 23. Claude může vrátit NaN nebo out-of-bounds index — vždy guarda na `match`
+
+Claude Haiku vrací index nejbližší shody jako číslo. Může vrátit:
+- Platný index — ale pokud pole je kratší, `array[index]` je `undefined`
+- `NaN` — `NaN < 0` i `NaN >= length` jsou vždy `false`, takže bounds check projde, ale `array[NaN]` je `undefined`
+
+**Bounds check nestačí.** Správný fix: ověř samotný výsledek přístupu do pole.
+
+```typescript
+const match = archive[result.index];
+if (!match) return null;  // zachytí NaN, out-of-bounds i undefined
+```
+
+Platí pro jakékoli Claude volání, které vrací index do pole předaného v promptu.
+
 ### 20. Q&A Candidate Agent — background agent pattern
 
 Opakující se zákaznické dotazy je potřeba detekovat asynchronně, ne synchronně při každém odeslání odpovědi.
