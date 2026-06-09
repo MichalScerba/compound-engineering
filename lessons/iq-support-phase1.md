@@ -216,6 +216,23 @@ const archiveText = archive
 
 **Kde spustit:** server-side při načtení page (synchronní, přidá ~500ms latency) nebo on-demand po kliku. Pro případ detailu je server-side vhodné — výsledek je k dispozici hned.
 
+### 19. Barevný proužek sledující zaoblení karty — overflow-hidden trick
+
+`border-left` s `border-radius` nevyplní zaoblené rohy — barva "plave" od okraje. Fix: vnitřní div s plnou výškou + `overflow-hidden` na obálce.
+
+```tsx
+<div className="rounded-md overflow-hidden border">
+  <div className="flex">
+    <div className="w-1 flex-shrink-0" style={{ backgroundColor: cat.color }} />
+    <div className="flex-1 min-w-0">
+      {/* obsah */}
+    </div>
+  </div>
+</div>
+```
+
+`overflow-hidden` na obálce způsobí, že vnitřní div je oříznut přesně podle zaoblení — proužek vyplní rohy správně bez CSS hacků.
+
 ### 18. Usage counting jako quality signal — KB threshold pattern
 
 Každá odpověď v archivu začíná jako "individuální" (usage_count = 0). Teprve po opakovaném použití (dedup UPDATE) se stane součástí znalostní báze. Threshold ≥ 2 oddělí KB od šumu.
