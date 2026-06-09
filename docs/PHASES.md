@@ -177,6 +177,23 @@ lessons/
 
 ## Aktuální stav projektu
 
-**Aktivní fáze:** Fáze 2 — Project Template
-**Poslední aktualizace:** 2026-06-08
+**Aktivní fáze:** Fáze 2 — Project Template (probíhá na IQ-Support)
+**Poslední aktualizace:** 2026-06-09
 **Fáze 2 aktivní kroky:** 1, 2, 3, 4, 5, 7, 8, 9, 10 hotovy — billing přeskočen (přidá se na prvním reálném projektu)
+
+---
+
+## První reálný produkt — IQ-Support
+
+**Projekt:** emailová podpora s AI analytikou
+**Repozitář:** `/AI-Projects/Work/iq-support`
+**Deploy:** https://iq-support.vercel.app
+
+| Fáze | Popis | Stav |
+|------|-------|------|
+| 1 | MVP — správa případů, Q&A archivace, auth, deploy | `[x]` |
+| 1b | Dashboard, sidebar, sledování času | `[x]` |
+| 2 | AI asistence — návrhy, knowledge base, candidate agent | `[x]` |
+| 3 | Škálování — analytika, role, multi-tenant | `[ ]` |
+
+**Blokováno:** M365 Graph API (čekání na IT — email integrace)
