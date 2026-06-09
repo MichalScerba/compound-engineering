@@ -216,6 +216,82 @@ const archiveText = archive
 
 **Kde spustit:** server-side při načtení page (synchronní, přidá ~500ms latency) nebo on-demand po kliku. Pro případ detailu je server-side vhodné — výsledek je k dispozici hned.
 
+### 14. jsonrepair — robustní parsování Claude JSON
+
+`JSON.parse` selhává na různých formátech Claude výstupu: markdown code blocky, literální newlines, unescapované uvozovky uvnitř stringů. Místo vlastního sanitizéru použij `jsonrepair`:
+
+```bash
+npm install jsonrepair
+```
+
+```typescript
+import { jsonrepair } from "jsonrepair";
+
+function parseJSON<T>(text: string): T {
+  const clean = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+  try {
+    return JSON.parse(clean) as T;
+  } catch {
+    return JSON.parse(jsonrepair(clean)) as T;
+  }
+}
+```
+
+Pokrývá: trailing commas, unescapované quotes, literální newlines, chybějící závorky.
+
+### 15. AI auto-kategorizace + manuální override — pattern pro hybrid klasifikaci
+
+Při ukládání Q&A Claude přiřadí kategorii automaticky (`category_confirmed = false`). Agent ji může ručně opravit v UI (`category_confirmed = true`). Tím máš hybrid: AI dělá 90 % práce, agent opravuje výjimky.
+
+```typescript
+// lib/claude.ts — kategorizer
+export async function categorizeQA(
+  question: string,
+  categories: { id: string; slug: string; name: string }[]
+): Promise<string | null> {
+  const categoryList = categories.map((c) => `- ${c.slug}: ${c.name}`).join("\n");
+  // Claude vrátí { slug: "<slug nebo null>" }
+  // Pak lookup id z categories pole
+}
+
+// Supabase — RLS na lookup tabulce
+// Nová tabulka s kategoriemi potřebuje explicitní read policy pro authenticated uživatele
+// jinak server action vrátí prázdné pole bez chyby (tiché selhání)
+create policy "authenticated users can read qa_categories"
+  on qa_categories for select to authenticated using (true);
+```
+
+**Gotcha:** Supabase vrátí `[]` (ne error) pokud RLS blokuje čtení lookup tabulky. Debug: přidej `console.log` na délku pole — pokud je 0 a SQL editor data vrací, je to RLS.
+
+### 16. Select nastylovaný jako badge — `appearance: none` + inline styles
+
+`<select>` element lze nastylovat jako barevný badge. Klíč: `appearance: none` + `textAlignLast: center`. Pro dynamické barvy z DB použij inline styles (Tailwind purge by třídy s runtime hodnotami odstranil).
+
+```typescript
+style={{
+  backgroundColor: `${color}20`,
+  color: color,
+  borderRadius: "6px",
+  padding: "3px 10px",
+  appearance: "none",
+  WebkitAppearance: "none",
+  textAlignLast: "center",
+}}
+```
+
+Auto-submit při změně: `onChange={() => formRef.current?.requestSubmit()}` — `requestSubmit()` spustí validaci formu, `submit()` ji obejde.
+
+### 17. Filtrování server component přes URL search params
+
+Server component přijme `searchParams` jako prop, filtruje Supabase query, UI odkazuje na `?category=<slug>`. Žádný client state, URL je zdrojem pravdy — funguje s back/forward tlačítky a sdílením odkazu.
+
+```typescript
+export default async function Page({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  const { category: activeSlug } = await searchParams;
+  // query.eq("category_id", activeCategory.id) pokud activeSlug existuje
+}
+```
+
 ### 11. AI suggestion — on-demand přes API route, ne server action
 
 Generování AI návrhu v reply formu: uživatel klikne tlačítko → fetch na API route → výsledek se vloží do textarea.
