@@ -216,6 +216,36 @@ const archiveText = archive
 
 **Kde spustit:** server-side při načtení page (synchronní, přidá ~500ms latency) nebo on-demand po kliku. Pro případ detailu je server-side vhodné — výsledek je k dispozici hned.
 
+### 18. Usage counting jako quality signal — KB threshold pattern
+
+Každá odpověď v archivu začíná jako "individuální" (usage_count = 0). Teprve po opakovaném použití (dedup UPDATE) se stane součástí znalostní báze. Threshold ≥ 2 oddělí KB od šumu.
+
+```sql
+-- Supabase RPC pro atomický increment
+create or replace function increment_qa_usage(entry_id uuid)
+returns void as $$
+  update qa_archive
+  set usage_count = usage_count + 1,
+      last_used_at = now()
+  where id = entry_id;
+$$ language sql security definer;
+```
+
+```typescript
+// Volat pouze při dedup UPDATE, ne při INSERT
+if (existingQAId) {
+  await supabase.from("qa_archive").update(qaPayload).eq("id", existingQAId);
+  await supabase.rpc("increment_qa_usage", { entry_id: existingQAId });
+} else {
+  await supabase.from("qa_archive").insert({ ...qaPayload, case_id: caseId });
+}
+```
+
+UI pattern: `usage_count >= 2` → "KB" badge + plný styl; `< 2` → průhledné pozadí, šedý text.
+Řazení: `order("usage_count", { ascending: false })` → přirozený žebříček nejpoužívanějších odpovědí.
+
+**Proč RPC místo `update({ usage_count: count + 1 })`:** Supabase JS client nepodporuje `field = field + 1` přímo v `.update()` — musel by se nejdřív fetchovat aktuální hodnota. RPC to řeší atomicky bez race condition.
+
 ### 14. jsonrepair — robustní parsování Claude JSON
 
 `JSON.parse` selhává na různých formátech Claude výstupu: markdown code blocky, literální newlines, unescapované uvozovky uvnitř stringů. Místo vlastního sanitizéru použij `jsonrepair`:
