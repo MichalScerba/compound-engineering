@@ -458,3 +458,122 @@ Uživatel dodal HTML mockup jako referenci. Přístup který fungoval:
 - [x] `next.config.ts` — opravit Sentry options
 - [x] `playbooks/vercel-deploy.md` — trick s `printf` pro hromadné env vars
 - [ ] Zvážit přidání `(protected)` route group přímo do nextjs-starter jako vzor
+
+---
+
+### 24. Tool calling je definitivní fix pro JSON parsing z Claude
+
+**Projekt:** mailQ
+
+Lekce 1 dokumentuje regex sanitizaci jako fix pro JSON parse chyby. Tool calling je lepší řešení — eliminuje problém úplně.
+
+**Problém:** Claude vrátí JSON s neeescapovanými uvozovkami uvnitř string hodnot → `JSON.parse` selže. Regex sanitizace je křehká (neporadí si se všemi případy).
+
+**Fix — použij tool calling místo free-form JSON:**
+```typescript
+const TOOL: Anthropic.Tool = {
+  name: "save_result",
+  description: "Uloží výsledek",
+  input_schema: {
+    type: "object" as const,
+    properties: {
+      question: { type: "string" },
+      answer: { type: "string" },
+    },
+    required: ["question", "answer"],
+  },
+}
+
+const response = await client.messages.create({
+  model: "claude-haiku-4-5",
+  max_tokens: 1024,
+  tools: [TOOL],
+  tool_choice: { type: "tool", name: "save_result" },
+  messages: [{ role: "user", content: prompt }],
+})
+
+const toolUse = response.content.find(
+  (b): b is Anthropic.ToolUseBlock => b.type === "tool_use"
+)
+const result = toolUse.input as { question: string; answer: string }
+```
+
+Anthropic SDK garantuje validní strukturu — model je nucen volat tool se správným schématem. Žádný JSON.parse, žádné sanitizace.
+
+**Kdy použít:** vždy, když potřebuješ strukturovaný výstup z Claude. Jedinou výjimkou je streaming (tool calling ho komplikuje).
+
+---
+
+### 25. SQLite FTS5 — external content table nefunguje pro MATCH query
+
+**Projekt:** mailQ
+
+**Problém:** `CREATE VIRTUAL TABLE fts USING fts5(col, content='emails', content_rowid='rowid')` — `COUNT(*)` vrátí správný počet řádků, ale `WHERE fts MATCH 'term'` vrátí 0 výsledků. Záludné — table vypadá plná, ale search nefunguje.
+
+**Příčina:** external content table neindexuje obsah automaticky. Vyžaduje manuální rebuild (`INSERT INTO fts(fts) VALUES('rebuild')`) po každé změně dat. Bez rebuildu je index prázdný.
+
+**Fix — self-contained FTS5 tabulka (doporučeno):**
+```sql
+-- Nevyužívej content= pro jednoduché use cases
+CREATE VIRTUAL TABLE emails_fts USING fts5(
+  email_id UNINDEXED,
+  body_anon,
+  tokenize='unicode61'
+)
+
+-- Naplň při prvním spuštění
+INSERT INTO emails_fts(email_id, body_anon)
+SELECT id, body_anon FROM emails WHERE body_anon != ''
+```
+
+```typescript
+// Detekuj a přebuduj pokud existuje broken external-content varianta
+const existing = db.prepare(
+  "SELECT sql FROM sqlite_master WHERE name = 'emails_fts'"
+).get() as { sql: string } | undefined
+
+if (!existing || existing.sql.includes("content=")) {
+  db.exec("DROP TABLE IF EXISTS emails_fts")
+  db.exec("CREATE VIRTUAL TABLE emails_fts USING fts5(email_id UNINDEXED, body_anon, tokenize='unicode61')")
+  db.exec("INSERT INTO emails_fts(email_id, body_anon) SELECT id, body_anon FROM emails WHERE body_anon != ''")
+}
+```
+
+**Search query — prefix matching s `*`:**
+```typescript
+const terms = question
+  .split(/\s+/)
+  .filter(w => w.length > 3)
+  .map(w => `${w}*`)   // prefix match — důležité pro FTS výsledky
+  .join(" OR ")
+
+const rows = db.prepare(
+  "SELECT email_id FROM emails_fts WHERE emails_fts MATCH ? ORDER BY rank LIMIT 5"
+).all(terms)
+```
+
+Pozor: `"term"` (s uvozovkami) = phrase match, `term*` = prefix match. Pro keyword search chceš `term*`.
+
+---
+
+### 26. Model selection pro AI pipeline — Haiku vs Sonnet
+
+**Projekt:** mailQ
+
+Haiku 4.5 stačí pro většinu pipeline úloh, Sonnet je potřeba jen pro komplexní reasoning.
+
+| Úloha | Model | Důvod |
+|-------|-------|-------|
+| Klasifikace emailu (je to dotaz?) | Haiku 4.5 | Binární rozhodnutí, jednoduché |
+| Syntéza odpovědi z více emailů | Haiku 4.5 | Kombinace textu, ne reasoning |
+| Kategorizace (assign slug) | Haiku 4.5 | Výběr z fixního seznamu |
+| Clustering (najdi skupiny) | Sonnet 4.6 | Vyžaduje porovnávání přes celý dataset |
+| Generování Q&A z vlákna | Sonnet 4.6 | Přeformulování + zachování stylu |
+
+**Pravidlo:** pokud úloha vyžaduje porovnávání nebo reasoning přes mnoho položek najednou → Sonnet. Pokud jde o zpracování jedné položky → Haiku.
+
+**Náklady mailQ pipeline (216 Q&A):**
+- Haiku (syntéza + kategorizace): ~$0.02
+- Sonnet (clustering + Q&A generování): ~$0.10
+
+Opus + adaptive thinking je zakázán pro rutinní pipeline úlohy — viz [[feedback_model_cost]].
