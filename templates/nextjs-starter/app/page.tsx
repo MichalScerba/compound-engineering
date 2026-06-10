@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 const features = [
   {
@@ -27,9 +27,9 @@ export default function Home() {
         <p className="text-lg text-gray-500 max-w-xl">
           One or two sentences describing what your product does and who it is for.
         </p>
-        <Button asChild size="lg">
-          <Link href="/login">Get started</Link>
-        </Button>
+        <Link href="/login" className={buttonVariants({ size: "lg" })}>
+          Get started
+        </Link>
       </section>
 
       {/* Features */}
@@ -53,9 +53,9 @@ export default function Home() {
       <section className="flex flex-col items-center text-center px-4 py-24 gap-4">
         <h2 className="text-3xl font-bold">Ready to get started?</h2>
         <p className="text-gray-500">No credit card required.</p>
-        <Button asChild>
-          <Link href="/login">Sign up free</Link>
-        </Button>
+        <Link href="/login" className={buttonVariants()}>
+          Sign up free
+        </Link>
       </section>
     </main>
   );
