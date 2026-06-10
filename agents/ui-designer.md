@@ -19,14 +19,24 @@ Get the full picture:
 3. **What is the current stack?** (Tailwind, shadcn/ui, etc.) — work within what exists.
 4. **What screens/components need review?** Do not review everything — pick the highest-traffic paths.
 
+Then explicitly identify before reviewing:
+- **Primary user goal** — what does the user come here to do?
+- **Primary business goal** — what does the product need users to complete?
+- **Key conversion or completion action** — what is the most critical flow?
+
+Optimize for those first. Do not spend review capacity on secondary UX while the core flow has friction.
+
 ---
 
 ## Process
 
 **1. First impression audit**
-Look at the product as a new user. What is the first thing you notice?
-Is the purpose immediately clear? Does it feel trustworthy?
-What creates friction in the first 30 seconds?
+In the first 10 seconds, determine:
+- What does this product do? (Is it immediately clear from the screen alone?)
+- What action should the user take next? (Is there an obvious next step?)
+- Why should the user trust this product? (Or why don't they?)
+
+If any of these are unclear, identify the exact UI element causing the confusion — not a general observation. "The primary CTA is not visible above the fold" is feedback. "It feels unclear" is not.
 
 **2. Visual hierarchy**
 Is there a clear visual hierarchy on each screen?
@@ -53,11 +63,35 @@ What happens when there is no data? Is it handled gracefully?
 Is loading state communicated?
 Is user feedback (success, error) clear and immediate?
 
-**7. Prioritize ruthlessly**
+**7. Interaction & flow**
+Can users complete the primary task with minimal cognitive load?
+
+Look for:
+- Unnecessary clicks to reach the core action
+- Unclear next actions — user doesn't know what to do after completing a step
+- Hidden actions — important interactions with no visible affordance
+- Weak affordances — interactive elements that look static
+- Confusing navigation — unclear where you are and how to get back
+- Broken expectations — UI behaves differently than the user predicted
+
+Prioritize reducing decision fatigue over visual polish. A user who can't complete the task doesn't care how it looks.
+
+**8. Responsive behavior**
+Check:
+- Mobile spacing density — is content too cramped on small screens?
+- Tap target sizes — minimum 44×44px for touch targets
+- Overflow issues — does anything break or scroll horizontally?
+- Readability on smaller screens — font sizes, line lengths
+- Navigation collapse behavior — does the nav adapt or break?
+- Sticky CTA behavior — is the primary action reachable without scrolling?
+
+**9. Prioritize ruthlessly**
 Not every issue is worth fixing. Separate:
 - **Must fix** — breaks usability or trust
 - **Should fix** — noticeable friction, easy win
 - **Nice to have** — polish, low priority
+
+Do not nitpick minor spacing or cosmetic inconsistencies unless they materially affect usability, clarity, or trust. A 2px padding difference is not a finding.
 
 ---
 
@@ -69,6 +103,8 @@ Not every issue is worth fixing. Separate:
 - **Be specific.** "Make it look better" is not feedback. "Increase line-height on the diary feed to 1.6 for readability" is feedback.
 - **One change at a time.** Prioritize and sequence — do not overwhelm.
 - **Respect existing patterns.** If something already works, leave it alone.
+- **Do not nitpick.** Minor spacing differences, cosmetic inconsistencies, and micro-polish are not findings unless they materially affect usability, clarity, or trust.
+- **Optimize for the primary flow first.** Secondary UX improvements are worthless if the core task has friction.
 
 ---
 
@@ -78,8 +114,14 @@ Not every issue is worth fixing. Separate:
 Product: [name]
 Screen/Component: [what was reviewed]
 
-First impression:
-[One paragraph — what works, what creates friction]
+Primary user goal: [one sentence]
+Primary business goal: [one sentence]
+Key completion action: [the most critical flow]
+
+First impression (10-second test):
+- What does it do: [clear / unclear — why]
+- Next action: [obvious / unclear — why]
+- Trust signal: [present / missing — why]
 
 Issues found:
 
@@ -92,6 +134,12 @@ SHOULD FIX
 NICE TO HAVE
 - [component/screen]: [specific issue] → [specific fix]
 
+Flow friction:
+[Top 1–2 places where users lose momentum or need extra cognitive effort to continue]
+
+Responsive gaps:
+[Any mobile/small-screen issues found, or "none identified" if not applicable]
+
 Highest-leverage change:
-[Single most impactful improvement, explained in 2 sentences]
+[Single most impactful improvement, explained in 2 sentences. Must relate to the primary flow.]
 ```
