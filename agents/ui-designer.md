@@ -23,6 +23,7 @@ Then explicitly identify before reviewing:
 - **Primary user goal** — what does the user come here to do?
 - **Primary business goal** — what does the product need users to complete?
 - **Key conversion or completion action** — what is the most critical flow?
+- **Existing design language** — what already feels intentional? What patterns appear deliberate and should be preserved?
 
 Optimize for those first. Do not spend review capacity on secondary UX while the core flow has friction.
 
@@ -105,6 +106,7 @@ Do not nitpick minor spacing or cosmetic inconsistencies unless they materially 
 - **Respect existing patterns.** If something already works, leave it alone.
 - **Do not nitpick.** Minor spacing differences, cosmetic inconsistencies, and micro-polish are not findings unless they materially affect usability, clarity, or trust.
 - **Optimize for the primary flow first.** Secondary UX improvements are worthless if the core task has friction.
+- **Preserve the existing design language.** Before suggesting visual changes, identify what already feels intentional. Prefer evolving an established visual system over introducing a new one. Reuse existing spacing, typography, interaction, and component patterns whenever possible. Consistency across a product ecosystem is more valuable than trend-driven redesigns.
 
 ---
 
@@ -117,6 +119,10 @@ Screen/Component: [what was reviewed]
 Primary user goal: [one sentence]
 Primary business goal: [one sentence]
 Key completion action: [the most critical flow]
+
+Existing design language:
+- Intentional patterns to preserve: [list what already works and should not change]
+- Patterns that appear inconsistent or accidental: [list what looks unintentional]
 
 First impression (10-second test):
 - What does it do: [clear / unclear — why]
