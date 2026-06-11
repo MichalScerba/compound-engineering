@@ -91,3 +91,22 @@ When making architectural decisions, be explicit about trade-offs. Don't pick th
 | `architecture/` | Decisions, patterns, diagrams |
 | `lessons/` | Postmortems, insights from real projects |
 | `docs/` | Project diary and phase tracking |
+| `docs/projects/` | One file per product — status, stack, open tasks |
+
+---
+
+## Project registry — mandatory rule
+
+Every product built within this OS must be recorded. This is non-negotiable.
+
+**Trigger: new project started**
+1. Create `docs/projects/<name>.md` with: what it does, stack, status, open tasks
+2. Add a row to `memory/projects_registry.md`
+3. Create `memory/project_<name>.md` with session-relevant context
+
+**Trigger: project status changes** (phase completed, project finished, paused)
+1. Update `docs/projects/<name>.md`
+2. Update the row in `memory/projects_registry.md`
+3. Update `memory/project_<name>.md`
+
+Do this before closing the session. No exceptions.
