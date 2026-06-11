@@ -176,3 +176,40 @@ import { buttonVariants } from "@/components/ui/button"
 ```
 
 **Pravidlo:** Pokud používáš `@base-ui/react` místo Radix, zkontroluj zda komponenta podporuje composition pattern. `buttonVariants` je vždy bezpečná alternativa.
+
+---
+
+### 7. Computed initial state při page fetch — vyhnout se lazy load N+1
+
+Pokud komponenta zobrazuje stav ikony/badge odvozený z existence dat v DB, nevynucuj lazy load při prvním otevření — přidej informaci do page fetch.
+
+```typescript
+// ❌ Lazy load — ikona je šedá při načtení, žlutá až po kliknutí
+// PhaseList.tsx
+const [hasOutputs, setHasOutputs] = useState(false)
+// TaskOutputs zavolá onLoaded() až po prvním otevření panelu
+
+// ✅ Compute při page fetch — ikona je správně žlutá okamžitě
+// app/projects/[id]/page.tsx
+const { data } = await supabase
+  .from("projects")
+  .select("*, phases(*, tasks(*, task_outputs(id), task_attachments(id)))")
+  .eq("id", id)
+  .single()
+
+// Mapuj has_content per task
+const phases = data.phases.map(phase => ({
+  ...phase,
+  tasks: phase.tasks.map(task => ({
+    ...task,
+    has_content: task.task_outputs.length > 0 || task.task_attachments.length > 0,
+  }))
+}))
+
+// PhaseList.tsx
+const [hasOutputs, setHasOutputs] = useState(task.has_content ?? false)
+```
+
+**Proč:** Lazy load znamená N × (počet tasků) API calls po načtení stránky, nebo nesprávný initial stav (ikona šedá i když data existují). Fetchovat IDs spolu s page načtením je minimální overhead — PostgreSQL to zpracuje v jednom dotazu.
+
+**Pravidlo:** Pokud stav ikony/badge závisí na existenci dat, přidej `has_content: boolean` (nebo count) do page fetch. Nikdy nespoléhej na lazy load pro vizuální stav při načtení.
