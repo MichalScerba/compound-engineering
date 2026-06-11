@@ -1,6 +1,6 @@
 # Habit Shift
 
-**Stav:** AKTIVNÍ — Fáze 1 (MVP)
+**Stav:** POZASTAVENO — Fáze 1 (MVP rozpracováno, Den 1+2 hotovo)
 **Zahájení:** 2026-06-11
 **Repo:** /Users/michalscerba/AI-Projects/Personal/habit-shift
 **Deadline MVP:** 2026-06-15
