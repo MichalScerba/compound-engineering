@@ -1,39 +1,49 @@
 # Loom
 
-**Stav:** NOVÝ — zahájení 2026-06-12  
+**Stav:** AKTIVNÍ — Fáze 1 inicializována 2026-06-12  
 **Typ:** pracovní projekt  
-**Repo:** zatím neurčeno  
+**Repo:** /AI-Projects/Work/Loom  
 **Deadline:** zatím neurčen  
 
 ---
 
 ## Co projekt dělá
 
-Loom je autonomní multiagentní systém který přeměňuje design vstupy (screenshoty, design soubory) na hotový frontend kód — bez manuálního prostředníka.
+Loom je autonomní multiagentní systém který přeměňuje screenshoty pojišťovacích formulářů na hotové TSX komponenty — bez manuálního prostředníka.
 
-**Pipeline — 3 fáze:**
-1. **Design knihovna** — agenti sestaví design systém: tokeny, barvy, typografie, spacing, sada komponent
-2. **Komponenty ze screenu** — agenti analyzují screenshoty / designy a generují hotové UI komponenty
-3. **Frontend** — agenti sestaví celý frontend z komponent a design knihovny
+**Pipeline Fáze 1:**
+```
+inputs/screenshots/  →  [Agent 1: vision]  →  outputs/component_map.json
+                                                       ↓
+                        [Agent 2: codegen]  →  design_tokens.json + types.ts + *.tsx
+```
 
 ---
 
 ## Stack
 
-*Upřesnit v první session.*
-
----
-
-## Open otázky pro první session
-
-- Vstupní formát: Figma soubory? Screenshoty? Oboje?
-- Výstupní framework: React? Next.js?
-- Orchestrace agentů: Claude API přímo? LangGraph? Custom?
-- Jak agenti komunikují výstupy mezi sebou (kontext pipeline)?
-- Jak se řeší iterace — agent udělá chybu, jak se opraví?
+- **Jazyk:** Python 3.11+ (async)
+- **API:** Anthropic SDK
+- **Agent 1 (vision):** claude-opus-4-8
+- **Agent 2 (codegen):** claude-sonnet-4-6
+- **Výstupy:** JSON tokeny + Next.js TSX (Tailwind + shadcn/ui + cva)
 
 ---
 
 ## Fáze
 
-*Doplnit po první architektonické session.*
+| # | Milestone | Stav |
+|---|-----------|------|
+| M1 | Projekt vytvořen, orchestrator běží bez chyb | ✅ HOTOVO |
+| M2 | Screenshot → component_map.json s ≥5 komponentami | ⬜ todo |
+| M3 | component_map.json → design_tokens.json + ≥3 TSX | ⬜ todo |
+| M4 | E2E: cestovní pojištění → sdílené komponenty | ⬜ todo |
+| M5 | Fáze 2 ready — pokrývá všechny formulářové prvky | ⬜ todo |
+
+---
+
+## Open otázky
+
+- Jak se řeší iterace — agent udělá chybu, jak se opraví?
+- Fáze 2 a 3 architektura (product-specific komponenty, full frontend assembly)
+- Storybook integrace (volitelné)
