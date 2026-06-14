@@ -1,6 +1,6 @@
 # ApexFeeder
 
-**Stav:** AKTIVNÍ — Fáze 1 téměř hotová (čeká Tradovate login test)
+**Stav:** DOKONČEN 2026-06-14
 **Typ:** pracovní projekt  
 **Repo:** `/Users/michalscerba/AI-Projects/Personal/apex-feeder`  
 **Hosting:** Railway  
