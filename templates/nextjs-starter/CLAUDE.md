@@ -27,6 +27,23 @@ public/       ← static assets
 - No comments explaining what code does — name things well instead
 - shadcn components go in `components/ui/`, custom components go in `components/`
 
+## Landing page (`app/page.tsx`)
+
+The root page is a public landing page — visible before login. Structure:
+
+```
+Hero      — centered headline + subline + CTA button → /login
+Features  — gray background, 3-column grid with title + description per item
+CTA       — second call-to-action at the bottom
+```
+
+Customize before shipping:
+1. Replace headline and subline in the Hero section
+2. Update the `features` array with real product benefits (3 items works best)
+3. Change CTA text and button labels to match the product voice
+
+The layout intentionally has no navbar — login is the only action. Keep it minimal.
+
 ## Adding shadcn components
 
 ```bash
