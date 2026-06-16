@@ -8,6 +8,6 @@ Centrální přehled všech produktů. Detaily v `/docs/projects/<name>.md`.
 | DeployMate | AKTIVNÍ | 2026-06-10 | Monitoring novinky pojišťoven, Fáze 7 hotovo |
 | Habit Shift | POZASTAVENO | 2026-06-11 | Chat AI pro návyky, Den 1+2 hotovo |
 | Nucleus | AKTIVNÍ | 2026-06-11 | Personal OS dashboard, frontend ✓ |
-| Loom | POZASTAVENO | 2026-06-13 | UI knihovna, Fáze 1–3 ✓ (108 komponent) |
+| Loom | AKTIVNÍ | 2026-06-17 | UI refresh Fáze 4: Orfeus design system, landing page, SiteHeader, travel step 2 ✓ |
 | ApexFeeder | DOKONČEN | 2026-06-14 | Databento CSV → WS stream, 235 481 eventů, 4 TF |
 | ApexEngine | AKTIVNÍ | 2026-06-16 | SMC v2 backtest NQ 2020: RR=3, 36 obchodů, 36.1% WR, +464 bodů |
