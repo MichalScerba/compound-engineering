@@ -20,9 +20,9 @@ AI-powered nástroj pro mapování pojistných rizik z číselníků 4 českých
 
 ## Stav
 
-**AKTIVNÍ — Fáze 3b ✅ dokončena (2026-06-20)**
+**AKTIVNÍ — Fáze 4 ✅ dokončena (2026-06-20)**
 
-Všechny 4 pojišťovny plně namapovány. 0 pending rizik.
+Validace & čištění dokončena. 734 confirmed, 0 pending, 485 skipped. Pokrok 100 % u všech pojišťoven.
 
 ## Výsledky — celkový přehled
 
@@ -57,7 +57,7 @@ Všechny 4 pojišťovny plně namapovány. 0 pending rizik.
 | 2 | DB schema + seed | ✅ 2026-06-19 |
 | 3 | Review UI (Next.js) | ✅ 2026-06-19 |
 | 3b | KB Mapování (property-vault) | ✅ 2026-06-20 |
-| 4 | Validace & čištění | 🔲 TODO |
+| 4 | Validace & čištění | ✅ 2026-06-20 |
 | 5 | Export výsledků (CSV/Excel) | 🔲 TODO |
 | 6 | Polish (keyboard shortcuts, bulk ops) | 🔲 volitelné |
 
@@ -92,20 +92,88 @@ Zdroj: `data/wsp_majetek_struktura.json`
 
 ## Mapovací skripty
 
-| Script | Pojišťovna | Metoda |
-|--------|-----------|--------|
-| `scripts/generate_mapping.py` | Kooperativa | Python PoC |
-| `scripts/generate_direct_mapping.py` | DIRECT | Python PoC |
-| `scripts/generate_cpp_mapping.py` | ČPP | Python PoC |
-| `scripts/generate_generali_mapping.py` | Generali | Python PoC |
-| `scripts/apply_cpp_mapping.ts` | ČPP | KB → TypeScript seed |
-| `scripts/apply_kooperativa_mapping.ts` | Kooperativa | KB → TypeScript seed |
-| `scripts/apply_direct_mapping.ts` | DIRECT | Pattern → TypeScript seed |
-| `scripts/apply_generali_mapping.ts` | Generali | Product codes → TypeScript seed |
+| Script | Fáze | Popis |
+|--------|------|-------|
+| `scripts/generate_mapping.py` | 1 | Python PoC — Kooperativa |
+| `scripts/generate_direct_mapping.py` | 1 | Python PoC — DIRECT |
+| `scripts/generate_cpp_mapping.py` | 1 | Python PoC — ČPP |
+| `scripts/generate_generali_mapping.py` | 1 | Python PoC — Generali |
+| `scripts/apply_cpp_mapping.ts` | 3b | KB → seed — ČPP |
+| `scripts/apply_kooperativa_mapping.ts` | 3b | KB → seed — Kooperativa |
+| `scripts/apply_direct_mapping.ts` | 3b | Pattern → seed — DIRECT |
+| `scripts/apply_generali_mapping.ts` | 3b | Product codes → seed — Generali |
+| `scripts/confirm_out_of_scope.ts` | 4 | Bulk-skip 554 out-of-scope rizik |
+| `scripts/apply_generali_missing_l1.ts` | 4 | Oprava 146 Generali confirmed bez L1 |
+| `scripts/skip_part1_koop_cpp.ts` | 4 | Vyřazení 70 Kooperativa+ČPP (balíčky, objekty) |
+| `scripts/skip_part2_generali_objects.ts` | 4 | Vyřazení 156 Generali (pattern: Pojistná částka, Limit na objekt, Sublimit) |
+| `scripts/skip_part3_generali_bundles.ts` | 4 | Vyřazení 58 Generali (balíčky krytí, objekty bez suffixu) |
+| `scripts/confirm_part4_real_risks.ts` | 4 | Potvrzení 8 Generali skutečných rizik s L2 |
+| `scripts/analyze_pending.ts` | 4 | Utility — výpis aktuálních pending rizik |
+| `scripts/final_stats.ts` | 4 | Utility — finální statistiky per pojišťovna |
+
+## Fáze 4 — klíčové poznatky (Validace & čištění)
+
+### Taxonomický rozdíl
+
+| Typ záznamu | Popis | Akce |
+|-------------|-------|------|
+| **Riziko (peril)** | Co se může stát: Povodeň, Krádež, Přepětí | POTVRDIT + L2 |
+| **Předmět pojištění (object)** | Co je pojištěno: Rodinný dům, Soubor movitých věcí | VYŘADIT |
+| **Balíček krytí (bundle)** | Soubor více rizik: OPTI, Základní, Nadstandardní | VYŘADIT |
+| **Limit / Pojistná částka** | Finanční parametr: "- Pojistná částka", "- Sublimit" | VYŘADIT |
+
+### Identifikační vzory předmětů pojištění v názvech
+
+- Obsahuje `Pojistná částka` → finanční parametr objektu → vyřadit
+- Obsahuje `Limit plnění na objekt TIA` → limit objektu → vyřadit
+- Obsahuje `Doporučený limit plnění na objekt TIA` → limit objektu → vyřadit
+- Obsahuje `Sublimit` → sublimit objektu → vyřadit
+
+### Finální výsledky validace
+
+| Část | Záznamy | Akce |
+|------|---------|------|
+| Kooperativa 12 + ČPP 58 | 70 | Vyřazeno (balíčky + předměty pojištění) |
+| Generali — pattern-based | 156 | Vyřazeno (Pojistná částka / Limit na objekt / Sublimit) |
+| Generali — balíčky + objekty bez suffixu | 58 | Vyřazeno |
+| Generali — skutečná rizika | 8 | Potvrzeno s L2 |
+| **Celkem vyřešeno** | **292** | |
+
+### 8 potvrzených rizik z Části 4
+
+| ID | Riziko | L1 | L2 |
+|----|--------|----|----|
+| 2542 | Poškození stavebních součástí (all risk) | Nemovitost | Ostatní (29) |
+| 2632 | Poškození stav. souč. (all risk) - Limit plnění TIA | Nemovitost | Ostatní (29) |
+| 2993 | Náhrada výdajů za ztrátu nájmu | Nemovitost | Ostatní (29) |
+| 2635 | Náhrada výdajů za ztrátu nájmu - Limit plnění TIA | Nemovitost | Ostatní (29) |
+| 2535 | Základní rozsah pojištění - Limit plnění (OH) | Odpovědnost | — |
+| 2791 | Základní rozsah pojištění (OH) | Odpovědnost | — |
+| 3033 | Základní rozsah / All Risk ODP (MD) | Odpovědnost | — |
+| 3482 | základní rozsah - Limit plnění - odpovědnost (MD) | Odpovědnost | — |
+
+### Finální DB stav (2026-06-20)
+
+| Pojišťovna | Confirmed | Pending | Skipped | Pokrok |
+|------------|-----------|---------|---------|--------|
+| DIRECT | 248 | 0 | 3 | 100 % |
+| Generali | 420 | 0 | 396 | 100 % |
+| Kooperativa | 11 | 0 | 12 | 100 % |
+| ČPP | 55 | 0 | 74 | 100 % |
+| **Celkem** | **734** | **0** | **485** | **100 %** |
+
+### UI změny (Fáze 4)
+
+- Odebrány insurer tabs nahoře → pojišťovny jen v levém sidebaru
+- Status filtr přesunut doleva pod název stránky
+- "Přeskočeno" → "Vyřazeno" (tab + badge v listu i detail stránce)
+- "Přeskočit" → "Vyřadit" (tlačítko ve formuláři)
+- StatsBar pokrok: `confirmed / (confirmed + pending)` — vyřazená rizika nevstupují do jmenovatele
+- ReviewSidebar: zachovává status filtr při přepínání mezi pojišťovnami
+- L1/L2 kaskádní filtr (`components/TaxonomyFilter.tsx`) — dropdown vpravo vedle status tabů; L2 se mění podle vybraného L1; filtr se zachovává při stránkování, přepínání pojišťoven i statusů; URL param `?l1=5&l2=22`
 
 ## Otevřené úkoly
 
-- [ ] Validace out-of-scope + manuální korekce skipped (Fáze 4)
 - [ ] Export CSV/Excel potvrzených rizik (Fáze 5)
 - [ ] Keyboard shortcuts pro rychlé korekce (Fáze 6, volitelné)
 
