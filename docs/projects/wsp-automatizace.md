@@ -172,6 +172,32 @@ Zdroj: `data/wsp_majetek_struktura.json`
 - ReviewSidebar: zachovává status filtr při přepínání mezi pojišťovnami
 - L1/L2 kaskádní filtr (`components/TaxonomyFilter.tsx`) — dropdown vpravo vedle status tabů; L2 se mění podle vybraného L1; filtr se zachovává při stránkování, přepínání pojišťoven i statusů; URL param `?l1=5&l2=22`
 
+## Fáze 4b — Bug fixes L1/L2 filtr + testy (2026-06-20)
+
+### Opravené bugy
+
+| Bug | Příčina | Oprava |
+|-----|---------|--------|
+| L1=Nevybráno → L2 zůstalo nastavené (l2=22) → 0 výsledků | `navigate()` mazal L2 z URL, ale `buildUrl` v status tabech ho znovu přidával | `buildUrl` vynucuje `l2=none` když `l1=none` |
+| `l2="none"` způsobilo `parseInt("none") = NaN` v Prisma query | Chybějící ošetření `none` hodnoty ve where clause | `l2 === "none" ? { l2Id: null } : l2 ? { l2Id: parseInt(l2) } : {}` |
+| L2 dropdown nešel kliknout bez vybraného L1 | `disabled={!l1Value}` blokoval L2 i při prázdném L1 | L2 vždy aktivní; při prázdném L1 zobrazí všechny L2 seskupené přes `<optgroup>` |
+| L2 nemělo možnost "Nevybráno" | Chybějící option | Přidáno `<option value="none">Nevybráno</option>` |
+| L1=Nevybráno → L2 auto-nestalo na Nevybráno | L1 onChange předával `undefined` pro L2 | L1 onChange předává `"none"` pro L2 když vybráno `"none"` |
+
+### Klíčová pravidla URL stavu
+
+- `?l1=none` → vždy musí být i `?l2=none` (buildUrl to vynucuje)
+- `l2=none` → `{ l2Id: null }` v Prisma where
+- `l1=none` → odstraňuje `inScope: { not: "false" }` (zobrazí i out-of-scope záznamy bez L1)
+- Kombinace `l1=none + l2=22` je nevalidní stav — UI ji neumožní, buildUrl ji opraví
+
+### Testy
+
+Přidán Vitest + React Testing Library (`__tests__/`):
+- `url-logic.test.ts` — 13 testů pro `buildUrl` a `buildWhere` logiku
+- `TaxonomyFilter.test.tsx` — 13 testů pro chování komponenty (navigate, disabled state, cascade)
+- Spustit: `npm test`
+
 ## Otevřené úkoly
 
 - [ ] Export CSV/Excel potvrzených rizik (Fáze 5)
