@@ -57,8 +57,8 @@ Všechny 4 pojišťovny plně namapovány. 0 pending rizik.
 | 2 | DB schema + seed | ✅ 2026-06-19 |
 | 3 | Review UI (Next.js) | ✅ 2026-06-19 |
 | 3b | KB Mapování (property-vault) | ✅ 2026-06-20 |
-| 4 | Export výsledků (CSV/Excel) | 🔲 TODO |
-| 5 | Validace & čištění | 🔲 TODO |
+| 4 | Validace & čištění | 🔲 TODO |
+| 5 | Export výsledků (CSV/Excel) | 🔲 TODO |
 | 6 | Polish (keyboard shortcuts, bulk ops) | 🔲 volitelné |
 
 ## Repo
@@ -105,8 +105,8 @@ Zdroj: `data/wsp_majetek_struktura.json`
 
 ## Otevřené úkoly
 
-- [ ] Export CSV/Excel potvrzených rizik (Fáze 4)
-- [ ] Validace out-of-scope seznamů (Fáze 5)
+- [ ] Validace out-of-scope + manuální korekce skipped (Fáze 4)
+- [ ] Export CSV/Excel potvrzených rizik (Fáze 5)
 - [ ] Keyboard shortcuts pro rychlé korekce (Fáze 6, volitelné)
 
 ## Kontakt
